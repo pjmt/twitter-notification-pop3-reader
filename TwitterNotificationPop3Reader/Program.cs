@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Newtonsoft.Json;
 
 namespace TwitterNotificationPop3Reader
 {
@@ -10,6 +9,24 @@ namespace TwitterNotificationPop3Reader
     {
         static void Main(string[] args)
         {
+            var server = "";
+            var username = "";
+            var password = "";
+
+            var pop3Repository = new POP3Repository(server, username, password);
+            var fromFilter = "notify@twitter.com";
+
+            var results = new List<EmailMessage>();
+
+            foreach (var message in pop3Repository.GetAll())
+            {
+                if (message.From.Contains(fromFilter))
+                {
+                    results.Add(message);
+                }
+            }
+
+            Console.WriteLine(JsonConvert.SerializeObject(results));
         }
     }
 }
